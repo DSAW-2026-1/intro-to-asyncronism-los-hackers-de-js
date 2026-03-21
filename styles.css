@@ -206,6 +206,7 @@ body {
 }
 
 .stat-box {
+    font-family: 'Press Start 2P', monospace;
     background: #0b0b0b;
     border: 0.25rem solid #fff;
     padding: 0.5rem 0.75rem;
