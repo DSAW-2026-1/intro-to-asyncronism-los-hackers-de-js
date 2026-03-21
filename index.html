@@ -4,8 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="app">
+        <header class="topbar">
+            <div class="top-left">
+                <div class="avatar"></div>
+                <div class="indicators">
+                    <span class="small-square"></span>
+                    <span class="small-square"></span>
+                    <span class="small-square green"></span>
+                </div>
+            </div>
+            <div class="top-right">PokeDex Console</div>
+        </header>
+
+        <main class="main">
+            <section class="left-panel">
+                <div class="image-wrap">
+                    <img src="temp/placeholder.png" alt="Pokemon">
+                </div>
+                <div class="description">POKEMON DESCRIPTION HERE</div>
+            </section>
+
+            <aside class="right-panel">
+                <div class="controls">
+                    <button class="control">TYPE</button>
+                    <button class="control">CATEGORY</button>
+                    <button class="control">WEAKNESS</button>
+                    <button class="control">EVOLUTION</button>
+                </div>
+
+                <div class="pad-and-stats">
+                    <div class="pad">
+                        <div class="row"><button>7</button><button>8</button><button>9</button></div>
+                        <div class="row"><button>4</button><button>5</button><button>6</button></div>
+                        <div class="row"><button>1</button><button>2</button><button>3</button></div>
+                        <div class="row"><button>0</button><button class="search">Search</button></div>
+                        <div class="row small"><button class="clear">Clear</button><button class="new">New</button></div>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stats-title">Stats</div>
+                        <div class="stat-row"><div class="stat-box">23</div><div class="stat-label">stat 1</div></div>
+                        <div class="stat-row"><div class="stat-box">23</div><div class="stat-label">stat 2</div></div>
+                        <div class="stat-row"><div class="stat-box">23</div><div class="stat-label">stat 3</div></div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

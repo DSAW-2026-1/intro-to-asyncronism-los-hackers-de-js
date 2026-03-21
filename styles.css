@@ -1,0 +1,52 @@
+:root{
+  --bg:#b20303;
+  --panel:#8b0000;
+  --accent:#ffb03b;
+  --dark:#0b0b0b;
+  --light:#e6e6e6;
+}
+*{box-sizing:border-box}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:Roboto, sans-serif;
+  background:var(--bg);
+  color:#fff;
+}
+.app{max-width:1180px;margin:28px auto;padding:18px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 8px}
+.top-left{display:flex;align-items:center;gap:12px}
+.avatar{width:64px;height:64px;border-radius:50%;background:rebeccapurple;border:6px solid #fff;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.indicators{display:flex;gap:8px}
+.small-square{width:14px;height:14px;border:2px solid #fff;background:transparent;display:inline-block}
+.small-square.green{background:#2ecc40}
+.top-right{font-family:'Press Start 2P',monospace;color:#fff;font-size:20px}
+.main{display:flex;gap:24px;margin-top:18px}
+.left-panel{flex:1}
+.image-wrap{background:#fff;padding:18px;border-radius:6px;display:inline-block;position:relative}
+.image-wrap img{display:block;max-width:640px;width:100%;height:auto;border:6px solid #ddd}
+.image-wrap:after{content:"";position:absolute;left:12px;bottom:-18px;width:36px;height:22px;background:var(--bg);transform:skewX(-18deg)}
+.description{margin-top:22px;background:#0b0b0b;padding:18px;border:6px solid #eee;color:#fff;font-family:'Press Start 2P',monospace;font-size:14px}
+.right-panel{width:420px;display:flex;flex-direction:column;gap:18px}
+.controls{display:flex;flex-direction:column;gap:14px}
+.control{background:#0b0b0b;color:#fff;border:4px solid #eee;padding:18px 8px;border-radius:6px;font-family:'Press Start 2P',monospace;letter-spacing:3px}
+.pad-and-stats{display:flex;gap:18px;align-items:flex-start}
+.pad{background:transparent}
+.pad .row{display:flex;gap:10px;margin-bottom:10px}
+.pad button{width:70px;height:58px;border-radius:6px;border:3px solid rgba(0,0,0,.15);background:#dcdcdc;color:#222;font-size:20px}
+.pad .search{background:var(--accent);border-color:#eaa84a}
+.pad .clear{background:#e54a4a;color:#fff}
+.pad .new{background:#3ee24a;color:#012}
+.pad .row.small button{width:120px}
+.stats{width:170px}
+.stats-title{font-family:'Press Start 2P',monospace;font-size:20px;margin-bottom:12px}
+.stat-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.stat-box{background:#0b0b0b;border:4px solid #fff;padding:8px 12px;width:70px;text-align:center;font-weight:700}
+.stat-label{font-size:12px;color:#fff;opacity:.9}
+
+@media(max-width:980px){
+  .app{padding:12px}
+  .main{flex-direction:column}
+  .right-panel{width:100%}
+  .pad-and-stats{flex-direction:row;justify-content:space-between}
+}
