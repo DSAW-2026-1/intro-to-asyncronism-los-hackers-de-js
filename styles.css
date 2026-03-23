@@ -157,7 +157,8 @@ body {
 }
 
 .pad {
-    background: transparent
+    background: transparent;
+    max-width: 14.375rem;
 }
 
 .pad .myrow {
@@ -178,7 +179,7 @@ body {
 
 .pad .search {
     background: var(--accent);
-    border-color: #eaa84a
+    border-color: #eaa84a;
 }
 
 .pad .clear {
