@@ -123,10 +123,15 @@ body {
 }
 
 .right-panel {
-    width: 26.25rem;
-    display: flex;
-    flex-direction: column;
+    /*width: 26.25rem;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
     gap: 1.125rem
+}
+@media screen and (min-width:992px) {
+    .right-panel{
+        width: 26.25rem;
+    }
 }
 
 .controls {
@@ -191,7 +196,8 @@ body {
 }
 
 .stats {
-    width: 10.625rem
+    /*width: 10.625rem*/
+    width: 8rem;
 }
 
 .stats-title {
@@ -230,10 +236,6 @@ body {
 
     .main {
         flex-direction: column
-    }
-
-    .right-panel {
-        width: 100%
     }
 
     .pad-and-stats {
