@@ -76,13 +76,13 @@ body {
 }
 
 .main {
-    display: flex;
+    /*display: flex;*/
     gap: 1.5rem;
     margin-top: 1.125rem;
 }
 
 .left-panel {
-    flex: 1;
+    /*flex: 1;*/
 }
 
 .image-wrap {
