@@ -155,7 +155,7 @@ body {
     background: transparent
 }
 
-.pad .row {
+.pad .myrow {
     display: flex;
     gap: 0.625rem;
     margin-bottom: 0.625rem
@@ -186,7 +186,7 @@ body {
     color: #012
 }
 
-.pad .row.small button {
+.pad .myrow.small button {
     width: 7.5rem
 }
 
