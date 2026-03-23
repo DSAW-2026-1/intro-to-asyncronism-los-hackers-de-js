@@ -150,6 +150,7 @@ body {
     letter-spacing: 0.1875rem
 }
 
+/*TODO: This thing explodes below 400px*/
 .pad-and-stats {
     display: flex;
     gap: 1.125rem;
