@@ -42,13 +42,14 @@ async function GetPokemon(nameOrID){
 async function GetPokemonData(nameOrID){
     const pokemonData = await GetPokemon(nameOrID);
     console.log(pokemonData);
-    return new Pokemon(pokemonData.id, pokemonData.name, pokemonData.sprites);
+    return new Pokemon(pokemonData.id, pokemonData.name, "desc here", pokemonData.sprites);
 }
 
 class Pokemon{
-    constructor(id, name, sprites){
+    constructor(id, name, description, sprites){
         this.id = id;
         this.name = name;
+        this.description = description;
         this.sprites = sprites;
     }
     getID(){return this.id}
@@ -57,5 +58,17 @@ class Pokemon{
         //TODO: Figure out how to deal with the sprites
         console.log(this.sprites)
         return null;
+    }
+    loadIntoDOM(){
+        const pokemonDescDiv = document.getElementById("description")
+        pokemonDescDiv.innerHTML = "" //Kill old inner HTML
+
+        const nameDiv = document.createElement("p");
+        nameDiv.innerText = this.name
+        const descDiv = document.createElement("p")
+        descDiv.innerText = this.description
+
+        pokemonDescDiv.append(nameDiv)
+        pokemonDescDiv.append(descDiv)
     }
 }
