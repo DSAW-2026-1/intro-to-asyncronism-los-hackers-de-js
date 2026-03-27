@@ -1,40 +1,11 @@
 const POKEAPI_URL = "https://pokeapi.co/api/v2/"
 
-/*function GetData(subUrl, query){
-    return new Promise((resolve, reject) =>{
-        fetch(pokeapiUrl+subUrl+"/"+query)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-        })
-        .catch(function () {
-            console.log("Couldn't do the shit");
-        });
-    })
-}*/
 async function GetData(subUrl, query) {
     const data = await fetch(POKEAPI_URL+subUrl+"/"+query);
     const dataAsJSON = await data.json();
     console.log(dataAsJSON);
     return dataAsJSON;
 }
-
-/*function GetPokemon(name){
-    return new Promise((resolve, reject) =>{
-        fetch(pokeapiUrl+"pokemon/"+name)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-        })
-        .catch(function () {
-            console.log("Couldn't do the shit");
-        });
-    })
-}*/
 async function GetPokemon(nameOrID){
     return await GetData("pokemon", nameOrID);
 }
@@ -54,14 +25,6 @@ async function GetPokemonData(nameOrID){
 }
 
 class Pokemon{
-    //TODO: We wont need this constructor soon
-    /*constructor(id, name, sprites){
-        this.id = id;
-        this.name = name;
-        this.sprites = sprites;
-        this.height = "N/A";
-        this.weight = "N/A";
-    }*/
     constructor(id, name, height, weight, sprites, species, speciesUrl){
         this.id = id;
         this.name = name;
@@ -83,7 +46,6 @@ class Pokemon{
         pokemonDescDiv.innerHTML = "" //Kill old inner HTML
 
         const nameDiv = document.createElement("p");
-        //const descDiv = document.createElement("div")
         const heightDiv = document.createElement("p")
         const weightDiv = document.createElement("p")
         const speciesDiv = document.createElement("p")
