@@ -19,8 +19,8 @@ async function GetPokemonData(nameOrID){
     for(let i = 0; i < pokemonData.abilities.length; i++){
         pokemonAbilities.push(
             new PokemonAbility(
-                pokemonData.abilities[i].name,
-                pokemonData.abilities[i].url
+                pokemonData.abilities[i].ability.name,
+                pokemonData.abilities[i].ability.url
             )
         )
     }
