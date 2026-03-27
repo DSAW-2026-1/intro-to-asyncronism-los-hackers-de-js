@@ -103,3 +103,61 @@ class PokemonAbility{
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     null
 )*/
+
+// --- Numpad wiring: input buffer + Search/Clear/New handlers ---
+(() => {
+    const padInputEl = document.getElementById('padInput')
+    if(!padInputEl) return
+
+    let currentInput = ''
+
+    const numberButtons = document.querySelectorAll('.pad button:not(.search):not(.clear):not(.new)')
+    numberButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const digit = btn.innerText.trim()
+            if(currentInput === '0') currentInput = ''
+            currentInput += digit
+            padInputEl.innerText = currentInput
+        })
+    })
+
+    const searchBtn = document.querySelector('.pad button.search')
+    const clearBtn = document.querySelector('.pad button.clear')
+    const newBtn = document.querySelector('.pad button.new')
+
+    if(searchBtn){
+        searchBtn.addEventListener('click', async () => {
+            if(!currentInput) return
+            padInputEl.innerText = 'Loading...'
+            try{
+                const p = await GetPokemonData(currentInput)
+                p.loadIntoDOM()
+                const imgEl = document.getElementById('pokemonImage')
+                if(p.sprites && p.sprites.front_default) imgEl.src = p.sprites.front_default
+                else imgEl.src = 'temp/placeholder.png'
+                padInputEl.innerText = currentInput
+            }catch(err){
+                console.error(err)
+                padInputEl.innerText = 'Not found'
+                setTimeout(()=>{ padInputEl.innerText = currentInput; }, 1200)
+            }
+        })
+    }
+
+    if(clearBtn){
+        clearBtn.addEventListener('click', () => {
+            currentInput = ''
+            padInputEl.innerText = '0'
+        })
+    }
+
+    if(newBtn){
+        newBtn.addEventListener('click', async () => {
+            const id = Math.floor(Math.random() * 898) + 1
+            currentInput = String(id)
+            padInputEl.innerText = currentInput
+            if(searchBtn) searchBtn.click()
+        })
+    }
+
+})()
