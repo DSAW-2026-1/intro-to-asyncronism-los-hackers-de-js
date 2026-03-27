@@ -1,6 +1,7 @@
 const POKEAPI_URL = "https://pokeapi.co/api/v2/"
 const pokemonDescDiv = document.getElementById("description")
 const pokemonAbilitiesDiv = document.getElementById("abilities")
+const padInputEl = document.getElementById('padInput')
 
 async function GetData(subUrl, query) {
     const data = await fetch(POKEAPI_URL+subUrl+"/"+query);
@@ -102,58 +103,51 @@ class PokemonAbility{
         this.url = url
     }
 }
+const searchBtn = document.querySelector('.pad button.search')
+const clearBtn = document.querySelector('.pad button.clear')
+const newBtn = document.querySelector('.pad button.new')
+let currentInput = ''
 
-// --- Numpad wiring: input buffer + Search/Clear/New handlers ---
-(() => {
-    const padInputEl = document.getElementById('padInput')
-    if(!padInputEl) return
-
-    let currentInput = ''
-
-    const numberButtons = document.querySelectorAll('.pad button:not(.search):not(.clear):not(.new)')
-    numberButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const digit = btn.innerText.trim()
-            if(currentInput === '0') currentInput = ''
-            currentInput += digit
+async function onSearch(params) {
+    let currentInput = padInputEl.innerText
+    if (!currentInput) return
+        padInputEl.innerText = 'Loading...'
+        try {
+            const pokemon = await GetPokemonData(currentInput)
+            pokemon.loadIntoDOM()
             padInputEl.innerText = currentInput
-        })
+        } catch (err) {
+            console.error(err)
+            padInputEl.innerText = 'Not found'
+            setTimeout(() => { padInputEl.innerText = currentInput; }, 1200)
+        }
+}
+function onClear(){
+    padInputEl.innerText = '0'
+    currentInput = ''
+}
+
+const numberButtons = document.querySelectorAll('.pad button:not(.search):not(.clear):not(.new)')
+numberButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const digit = btn.innerText.trim()
+        if (currentInput === '0') currentInput = ''
+        currentInput += digit
+        padInputEl.innerText = currentInput
     })
-
-    const searchBtn = document.querySelector('.pad button.search')
-    const clearBtn = document.querySelector('.pad button.clear')
-    const newBtn = document.querySelector('.pad button.new')
-
-    if(searchBtn){
-        searchBtn.addEventListener('click', async () => {
-            if(!currentInput) return
-            padInputEl.innerText = 'Loading...'
-            try{
-                const pokemon = await GetPokemonData(currentInput)
-                pokemon.loadIntoDOM()
-                padInputEl.innerText = currentInput
-            }catch(err){
-                console.error(err)
-                padInputEl.innerText = 'Not found'
-                setTimeout(()=>{ padInputEl.innerText = currentInput; }, 1200)
-            }
-        })
-    }
-
-    if(clearBtn){
-        clearBtn.addEventListener('click', () => {
-            currentInput = ''
-            padInputEl.innerText = '0'
-        })
-    }
-
-    if(newBtn){
-        newBtn.addEventListener('click', async () => {
-            const id = Math.floor(Math.random() * 898) + 1
-            currentInput = String(id)
-            padInputEl.innerText = currentInput
-            if(searchBtn) searchBtn.click()
-        })
-    }
-
-})()
+})
+if (searchBtn) {
+    searchBtn.addEventListener('click', async () => {onSearch()})
+}
+if (clearBtn) {
+    clearBtn.addEventListener('click', () => {onClear()})
+}
+//TODO: Do I really want this? I think probably not
+if (newBtn) {
+    newBtn.addEventListener('click', async () => {
+        const id = Math.floor(Math.random() * 898) + 1
+        currentInput = String(id)
+        padInputEl.innerText = currentInput
+        if (searchBtn) searchBtn.click()
+    })
+}
