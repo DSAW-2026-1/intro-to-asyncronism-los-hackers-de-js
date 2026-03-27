@@ -85,9 +85,15 @@ class Pokemon{
             pokemonAbilitiesDiv.append(newElement)
         }
     }
+    loadImgIntoDOM(){
+        const imgEl = document.getElementById('pokemonImage')
+        if(this.sprites && this.sprites.front_default) imgEl.src = this.sprites.front_default
+        else imgEl.src = 'temp/placeholder.png'
+    }
     loadIntoDOM(){
         this.loadDescIntoDOM()
         this.loadAbilitiesIntoDOM()
+        this.loadImgIntoDOM()
     }
 }
 class PokemonAbility{
@@ -96,13 +102,6 @@ class PokemonAbility{
         this.url = url
     }
 }
-//TEST THE SHIT
-/*const testPokemon = new Pokemon(
-    1,
-    "TestPokemon", 
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    null
-)*/
 
 // --- Numpad wiring: input buffer + Search/Clear/New handlers ---
 (() => {
@@ -130,11 +129,8 @@ class PokemonAbility{
             if(!currentInput) return
             padInputEl.innerText = 'Loading...'
             try{
-                const p = await GetPokemonData(currentInput)
-                p.loadIntoDOM()
-                const imgEl = document.getElementById('pokemonImage')
-                if(p.sprites && p.sprites.front_default) imgEl.src = p.sprites.front_default
-                else imgEl.src = 'temp/placeholder.png'
+                const pokemon = await GetPokemonData(currentInput)
+                pokemon.loadIntoDOM()
                 padInputEl.innerText = currentInput
             }catch(err){
                 console.error(err)
