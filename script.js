@@ -42,15 +42,34 @@ async function GetPokemon(nameOrID){
 async function GetPokemonData(nameOrID){
     const pokemonData = await GetPokemon(nameOrID);
     console.log(pokemonData);
-    return new Pokemon(pokemonData.id, pokemonData.name, "desc here", pokemonData.sprites);
+    return new Pokemon(
+        pokemonData.id, 
+        pokemonData.name, 
+        pokemonData.height, 
+        pokemonData.weight, 
+        pokemonData.sprites,
+        pokemonData.species.name,
+        pokemonData.species.url
+    );
 }
 
 class Pokemon{
-    constructor(id, name, description, sprites){
+    //TODO: We wont need this constructor soon
+    /*constructor(id, name, sprites){
         this.id = id;
         this.name = name;
-        this.description = description;
         this.sprites = sprites;
+        this.height = "N/A";
+        this.weight = "N/A";
+    }*/
+    constructor(id, name, height, weight, sprites, species, speciesUrl){
+        this.id = id;
+        this.name = name;
+        this.sprites = sprites;
+        this.height = height; //in dm
+        this.weight = weight; //in hg
+        this.species = species
+        this.speciesUrl = speciesUrl
     }
     getID(){return this.id}
     getName(){return this.name}
@@ -64,11 +83,20 @@ class Pokemon{
         pokemonDescDiv.innerHTML = "" //Kill old inner HTML
 
         const nameDiv = document.createElement("p");
+        //const descDiv = document.createElement("div")
+        const heightDiv = document.createElement("p")
+        const weightDiv = document.createElement("p")
+        const speciesDiv = document.createElement("p")
+
+        heightDiv.innerText = "Height: "+this.height/10+"m"
+        weightDiv.innerText = "Weight: "+this.weight/10+"kg"
+        speciesDiv.innerText = "From the "+this.species+" species"
+
         nameDiv.innerText = this.name
-        const descDiv = document.createElement("p")
-        descDiv.innerText = this.description
 
         pokemonDescDiv.append(nameDiv)
-        pokemonDescDiv.append(descDiv)
+        pokemonDescDiv.append(heightDiv)
+        pokemonDescDiv.append(weightDiv)
+        pokemonDescDiv.append(speciesDiv)
     }
 }
