@@ -35,10 +35,10 @@ async function GetPokemonData(nameOrID){
         pokemonData.species.url,
         pokemonAbilities
 
-       await pokemon.fetchSpeciesDetails();   // Endpoint 2: Species
-       await pokemon.fetchEvolutionDetails(); // Endpoint 3: Evolution
+    await pokemon.fetchSpeciesDetails();   // Endpoint 2: Species
+    await pokemon.fetchEvolutionDetails(); // Endpoint 3: Evolution
 
-return pokemon; 
+return pokemon;
     );
 }
 
@@ -155,14 +155,4 @@ if (newBtn) {
         padInputEl.innerText = currentInput
         if (searchBtn) searchBtn.click()
     })
-    const POKEAPI_URL = "https://pokeapi.co/api/v2/";
-const pokemonDescDiv = document.getElementById("description");
-const pokemonAbilitiesDiv = document.getElementById("abilities");
-const padInputEl = document.getElementById('padInput');
-
-    }
-}
-
-if (searchBtn) searchBtn.addEventListener('click', onSearch);
-if (clearBtn) clearBtn.addEventListener('click', () => { padInputEl.innerText = '0'; });
 }
