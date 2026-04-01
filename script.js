@@ -150,4 +150,181 @@ if (newBtn) {
         padInputEl.innerText = currentInput
         if (searchBtn) searchBtn.click()
     })
+    const POKEAPI_URL = "https://pokeapi.co/api/v2/";
+const pokemonDescDiv = document.getElementById("description");
+const pokemonAbilitiesDiv = document.getElementById("abilities");
+const padInputEl = document.getElementById('padInput');
+
+// MAIN DATA FETCHING
+async function GetData(subUrl, query) {
+    const response = await fetch(POKEAPI_URL + subUrl + "/" + query);
+    const dataAsJSON = await response.json();
+    return dataAsJSON;
+}
+
+async function GetPokemon(nameOrID) {
+    return await GetData("pokemon", nameOrID);
+}
+
+// INTEGRATED DATA PROCESSOR
+async function GetPokemonData(nameOrID) {
+    const pokemonData = await GetPokemon(nameOrID);
+    
+    const pokemonAbilities = [];
+    for(let i = 0; i < pokemonData.abilities.length; i++) {
+        pokemonAbilities.push(
+            new PokemonAbility(
+                pokemonData.abilities[i].ability.name,
+                pokemonData.abilities[i].ability.url
+            )
+        );
+    }
+
+    const pokemon = new Pokemon(
+        pokemonData.id, 
+        pokemonData.name, 
+        pokemonData.height, 
+        pokemonData.weight, 
+        pokemonData.sprites,
+        pokemonData.species.name,
+        pokemonData.species.url,
+        pokemonAbilities
+    );
+
+    // FETCHING  ENDPOINTS
+    // Endpoint 2: pokemon-species (Bio & Evolution URL)
+    await pokemon.fetchSpeciesDetails();
+    
+    // Endpoint 3: evolution-chain (Evolution Logic)
+    await pokemon.fetchEvolutionDetails();
+
+    return pokemon;
+}
+
+class Pokemon {
+    constructor(id, name, height, weight, sprites, species, speciesUrl, abilities) {
+        this.id = id;
+        this.name = name;
+        this.sprites = sprites;
+        this.height = height; 
+        this.weight = weight; 
+        this.species = species;
+        this.speciesUrl = speciesUrl;
+        this.abilities = abilities;
+        this.flavorText = "";
+        this.nextEvo = "None";
+    }
+
+    async fetchSpeciesDetails() {
+        const res = await fetch(this.speciesUrl);
+        const data = await res.json();
+        
+        const entry = data.flavor_text_entries.find(e => e.language.name === 'en');
+        this.flavorText = entry ? entry.flavor_text : "No biological data available.";
+        this.evolutionChainUrl = data.evolution_chain.url;
+    }
+
+    async fetchEvolutionDetails() {
+        const res = await fetch(this.evolutionChainUrl);
+        const data = await res.json();
+        // Find next stage in the chain
+        this.nextEvo = data.chain.evolves_to[0]?.species.name || "Max Stage";
+    }
+
+    loadDescIntoDOM() {
+        pokemonDescDiv.innerHTML = ""; 
+        const nameDiv = document.createElement("p");
+        const heightDiv = document.createElement("p");
+        const weightDiv = document.createElement("p");
+        const speciesDiv = document.createElement("p");
+        const bioDiv = document.createElement("p");
+
+        nameDiv.innerText = this.name.toUpperCase();
+        heightDiv.innerText = "Height: " + this.height / 10 + "m";
+        weightDiv.innerText = "Weight: " + this.weight / 10 + "kg";
+        speciesDiv.innerText = "Species: " + this.species;
+        
+        // Yellow Bio Text from Endpoint 2
+        bioDiv.innerText = this.flavorText.replace(/\n|\f/g, ' ');
+        bioDiv.style.color = "#ffff00"; 
+        bioDiv.style.fontSize = "10px";
+        bioDiv.style.marginTop = "10px";
+
+        pokemonDescDiv.append(nameDiv, heightDiv, weightDiv, speciesDiv, bioDiv);
+    }
+
+    async loadAbilitiesIntoDOM() {
+        pokemonAbilitiesDiv.innerHTML = "";
+        const titleDiv = document.createElement("h2");
+        titleDiv.innerText = "ABILITIES";
+        pokemonAbilitiesDiv.append(titleDiv);
+
+        for(let i = 0; i < this.abilities.length; i++) {
+            // Endpoint 4: ability/{id} (Technical effect)
+            const res = await fetch(this.abilities[i].url);
+            const data = await res.json();
+            const effect = data.effect_entries.find(e => e.language.name === 'en')?.short_effect || "No description.";
+
+            const newElement = document.createElement("p");
+            newElement.style.fontSize = "9px";
+            newElement.style.marginBottom = "5px";
+            newElement.innerHTML = `<strong>${this.abilities[i].name.toUpperCase()}:</strong> ${effect}`;
+            pokemonAbilitiesDiv.append(newElement);
+        }
+    }
+
+    loadImgIntoDOM() {
+        const imgEl = document.getElementById('pokemonImage');
+        if(this.sprites && this.sprites.front_default) {
+            imgEl.src = this.sprites.front_default;
+        } else {
+            imgEl.src = 'temp/placeholder.png';
+        }
+    }
+
+    updateEvolutionUI() {
+        // Update the 4th black button text
+        const controls = document.querySelectorAll('.control');
+        if(controls[3]) {
+            controls[3].innerText = `EVO: ${this.nextEvo.toUpperCase()}`;
+        }
+    }
+
+    loadIntoDOM() {
+        this.loadDescIntoDOM();
+        this.loadAbilitiesIntoDOM();
+        this.loadImgIntoDOM();
+        this.updateEvolutionUI();
+    }
+}
+
+class PokemonAbility {
+    constructor(name, url) {
+        this.name = name;
+        this.url = url;
+    }
+}
+
+// UI EVENT HANDLERS
+const searchBtn = document.querySelector('.pad button.search');
+const clearBtn = document.querySelector('.pad button.clear');
+
+async function onSearch() {
+    let currentInput = padInputEl.innerText;
+    if (!currentInput || currentInput === '0' || currentInput === 'Loading...') return;
+    
+    padInputEl.innerText = 'Loading...';
+    try {
+        const pokemon = await GetPokemonData(currentInput.toLowerCase());
+        pokemon.loadIntoDOM();
+        padInputEl.innerText = currentInput;
+    } catch (err) {
+        console.error(err);
+        padInputEl.innerText = 'NOT FOUND';
+        setTimeout(() => { padInputEl.innerText = currentInput; }, 1500);
+    }
+}
+
+if (searchBtn) searchBtn.addEventListener('click', onSearch);
+if (clearBtn) clearBtn.addEventListener('click', () => { padInputEl.innerText = '0'; });
 }
