@@ -59,14 +59,32 @@ class Pokemon {
 
     // Integrated logic for Endpoint 2 (Species) and 3 (Evolution)
     async fetchExtraInfo() {
+        // 1. Fetch Species Data
         const speciesData = await fetch(this.speciesUrl).then(res => res.json());
         const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
         this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
 
-        const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
-        this.nextEvo = evoData.chain.evolves_to[0]?.species.name || "None";
-    }
+        // 2. Fetch Evolution Chain
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
 
+        // LOGIC FIX: Find the next evolution based on the current name 
+        let chain = evoData.chain;
+        let foundNext = "Max Stage";
+
+        // Step A: Check if current pokemon is the base form (e.g. Bulbasaur)
+        if (chain.species.name === this.name.toLowerCase()) {
+            foundNext = chain.evolves_to[0]?.species.name || "Max Stage";
+        } else {
+            // Step B: Check if current is in the second stage (e.g. Ivysaur)
+            const secondStage = chain.evolves_to.find(e => e.species.name === this.name.toLowerCase());
+            if (secondStage) {
+                foundNext = secondStage.evolves_to[0]?.species.name || "Max Stage";
+            }
+        }
+
+        this.nextEvo = foundNext;
+    }
     getID() { return this.id }
     getName() { return this.name }
     
