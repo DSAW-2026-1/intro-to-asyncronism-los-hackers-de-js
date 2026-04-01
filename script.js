@@ -68,22 +68,36 @@ class Pokemon {
         const evoRes = await fetch(speciesData.evolution_chain.url);
         const evoData = await evoRes.json();
 
-        // LOGIC FIX: Find the next evolution based on the current name 
+        // LOGIC FIX: Comprehensive search for the next stage
+        let currentName = this.name.toLowerCase().trim();
         let chain = evoData.chain;
         let foundNext = "Max Stage";
 
-        // Step A: Check if current pokemon is the base form (e.g. Bulbasaur)
-        if (chain.species.name === this.name.toLowerCase()) {
+        // Check Stage 1 -> Stage 2
+        if (chain.species.name === currentName) {
             foundNext = chain.evolves_to[0]?.species.name || "Max Stage";
         } else {
-            // Step B: Check if current is in the second stage (e.g. Ivysaur)
-            const secondStage = chain.evolves_to.find(e => e.species.name === this.name.toLowerCase());
-            if (secondStage) {
-                foundNext = secondStage.evolves_to[0]?.species.name || "Max Stage";
+            // Check Stage 2 -> Stage 3
+            // We search inside the evolves_to array to find where the current pokemon is
+            const currentStage = chain.evolves_to.find(evo => evo.species.name === currentName);
+            
+            if (currentStage) {
+                // If found in stage 2, get stage 3
+                foundNext = currentStage.evolves_to[0]?.species.name || "Max Stage";
+            } else {
+                // Check if it's already in Stage 3 (Evolution of an evolution)
+                for (let branch of chain.evolves_to) {
+                    const finalStage = branch.evolves_to.find(evo => evo.species.name === currentName);
+                    if (finalStage) {
+                        foundNext = "Max Stage";
+                        break;
+                    }
+                }
             }
         }
 
         this.nextEvo = foundNext;
+    }
     }
     getID() { return this.id }
     getName() { return this.name }
