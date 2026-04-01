@@ -59,46 +59,14 @@ class Pokemon {
 
     // Integrated logic for Endpoint 2 (Species) and 3 (Evolution)
     async fetchExtraInfo() {
-        // 1. Fetch Species Data
         const speciesData = await fetch(this.speciesUrl).then(res => res.json());
         const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
         this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
 
-        // 2. Fetch Evolution Chain
-        const evoRes = await fetch(speciesData.evolution_chain.url);
-        const evoData = await evoRes.json();
-
-        // LOGIC FIX: Comprehensive search for the next stage
-        let currentName = this.name.toLowerCase().trim();
-        let chain = evoData.chain;
-        let foundNext = "Max Stage";
-
-        // Check Stage 1 -> Stage 2
-        if (chain.species.name === currentName) {
-            foundNext = chain.evolves_to[0]?.species.name || "Max Stage";
-        } else {
-            // Check Stage 2 -> Stage 3
-            // We search inside the evolves_to array to find where the current pokemon is
-            const currentStage = chain.evolves_to.find(evo => evo.species.name === currentName);
-            
-            if (currentStage) {
-                // If found in stage 2, get stage 3
-                foundNext = currentStage.evolves_to[0]?.species.name || "Max Stage";
-            } else {
-                // Check if it's already in Stage 3 (Evolution of an evolution)
-                for (let branch of chain.evolves_to) {
-                    const finalStage = branch.evolves_to.find(evo => evo.species.name === currentName);
-                    if (finalStage) {
-                        foundNext = "Max Stage";
-                        break;
-                    }
-                }
-            }
-        }
-
-        this.nextEvo = foundNext;
+        const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
+        this.nextEvo = evoData.chain.evolves_to[0]?.species.name || "None";
     }
-    }
+
     getID() { return this.id }
     getName() { return this.name }
     
