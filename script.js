@@ -52,6 +52,22 @@ class Pokemon{
         this.species = species
         this.speciesUrl = speciesUrl
         this.abilities = abilities
+
+        // Endpoint 2
+    async fetchSpeciesDetails() {
+        const res = await fetch(this.speciesUrl);
+        const data = await res.json();
+        const entry = data.flavor_text_entries.find(e => e.language.name === 'en');
+        this.flavorText = entry ? entry.flavor_text : "No data.";
+        this.evolutionChainUrl = data.evolution_chain.url;
+    }
+
+    // Endpoint 3
+    async fetchEvolutionDetails() {
+        const res = await fetch(this.evolutionChainUrl);
+        const data = await res.json();
+        this.nextEvo = data.chain.evolves_to[0]?.species.name || "Max Stage";
+    }
     }
     getID(){return this.id}
     getName(){return this.name}
