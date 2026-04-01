@@ -54,17 +54,44 @@ class Pokemon {
         this.abilities = abilities
         // New properties for extra endpoints
         this.flavorText = ""
-        this.nextEvo = ""
+        this.nextEvo = "MAX STAGE"
     }
 
     // Integrated logic for Endpoint 2 (Species) and 3 (Evolution)
     async fetchExtraInfo() {
-        const speciesData = await fetch(this.speciesUrl).then(res => res.json());
-        const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
-        this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
+        try {
+            const speciesData = await fetch(this.speciesUrl).then(res => res.json());
+            
+            // Endpoint 2: Flavor Text (Bio)
+            const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
+            this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
 
-        const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
-        this.nextEvo = evoData.chain.evolves_to[0]?.species.name || "None";
+            // Endpoint 3: Evolution Chain (Fixed Logic)
+            const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
+            
+            let currentPath = evoData.chain;
+            const targetName = this.name.toLowerCase();
+
+            // Loop through the chain to find the current pokemon and get the next one
+            while (currentPath) {
+                if (currentPath.species.name === targetName) {
+                    this.nextEvo = currentPath.evolves_to[0]?.species.name || "MAX STAGE";
+                    break;
+                }
+                
+                // Check if the target is in the next evolution branch
+                let foundInBranch = currentPath.evolves_to.find(e => e.species.name === targetName);
+                if (foundInBranch) {
+                    this.nextEvo = foundInBranch.evolves_to[0]?.species.name || "MAX STAGE";
+                    break;
+                }
+
+                currentPath = currentPath.evolves_to[0];
+            }
+        } catch (error) {
+            console.error("Error fetching evolution or species data:", error);
+            this.nextEvo = "UNKNOWN";
+        }
     }
 
     getID() { return this.id }
@@ -151,7 +178,7 @@ const newBtn = document.querySelector('.pad button.new')
 let currentInput = ''
 
 async function onSearch() {
-    let input = padInputEl.innerText
+    let input = padInputEl.innerText.trim()
     if (!input || input === '0') return
     
     padInputEl.innerText = 'Loading...'
@@ -159,6 +186,7 @@ async function onSearch() {
         const pokemon = await GetPokemonData(input.toLowerCase())
         pokemon.loadIntoDOM()
         padInputEl.innerText = input
+        currentInput = '' // Reset internal input after successful search
     } catch (err) {
         console.error(err)
         padInputEl.innerText = 'Not found'
