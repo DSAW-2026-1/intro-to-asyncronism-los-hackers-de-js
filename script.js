@@ -57,8 +57,7 @@ class Pokemon {
         this.species = species
         this.speciesUrl = speciesUrl
         this.abilities = abilities
-        this.types = types // Storing types
-        // New properties for extra endpoints
+        this.types = types 
         this.flavorText = ""
         this.nextEvo = "MAX STAGE"
     }
@@ -72,7 +71,7 @@ class Pokemon {
             const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
             this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
 
-            // Endpoint 3: Evolution Chain (Fixed Logic)
+            // Endpoint 3: Evolution Chain 
             const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
             
             let currentPath = evoData.chain;
