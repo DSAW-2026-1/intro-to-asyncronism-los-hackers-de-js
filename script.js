@@ -168,11 +168,11 @@ class Pokemon {
         // Update the black buttons on the right
         const controls = document.querySelectorAll('.control');
         
-        // Update the 1st black button with types (as requested in the image)
+        // Update the 1st black button with types
         if(controls[0]) controls[0].innerText = this.types.join(" / ").toUpperCase();
 
-        // Update the 4th black button with evolution data
-        if(controls[3]) controls[3].innerText = `EVO: ${this.nextEvo.toUpperCase()}`;
+        // Update the 3rd black button with evolution data (Now index 2 because Weakness is gone)
+        if(controls[2]) controls[2].innerText = `EVO: ${this.nextEvo.toUpperCase()}`;
     }
 }
 
