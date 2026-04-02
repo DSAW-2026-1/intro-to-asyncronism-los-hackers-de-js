@@ -18,7 +18,7 @@ async function GetPokemonData(nameOrID) {
     const pokemonData = await GetPokemon(nameOrID);
     console.log(pokemonData);
     
-    // NEW: Extracting types for the top-right button
+    // Extracting types for the top-right button
     const pokemonTypes = pokemonData.types.map(t => t.type.name);
 
     const pokemonAbilities = []
@@ -39,7 +39,7 @@ async function GetPokemonData(nameOrID) {
         pokemonData.species.name,
         pokemonData.species.url,
         pokemonAbilities,
-        pokemonTypes // Passing the new types array
+        pokemonTypes 
     );
 
     // EXTRA ENDPOINTS FETCHING
@@ -58,6 +58,7 @@ class Pokemon {
         this.speciesUrl = speciesUrl
         this.abilities = abilities
         this.types = types 
+        // New properties for extra endpoints
         this.flavorText = ""
         this.nextEvo = "MAX STAGE"
     }
@@ -71,20 +72,18 @@ class Pokemon {
             const entry = speciesData.flavor_text_entries.find(e => e.language.name === 'en');
             this.flavorText = entry ? entry.flavor_text.replace(/\n|\f/g, ' ') : "No data available.";
 
-            // Endpoint 3: Evolution Chain 
+            // Endpoint 3: Evolution Chain (Fixed Logic)
             const evoData = await fetch(speciesData.evolution_chain.url).then(res => res.json());
             
             let currentPath = evoData.chain;
             const targetName = this.name.toLowerCase();
 
-            // Loop through the chain to find the current pokemon and get the next one
             while (currentPath) {
                 if (currentPath.species.name === targetName) {
                     this.nextEvo = currentPath.evolves_to[0]?.species.name || "MAX STAGE";
                     break;
                 }
                 
-                // Check if the target is in the next evolution branch
                 let foundInBranch = currentPath.evolves_to.find(e => e.species.name === targetName);
                 if (foundInBranch) {
                     this.nextEvo = foundInBranch.evolves_to[0]?.species.name || "MAX STAGE";
@@ -109,20 +108,19 @@ class Pokemon {
     }
 
     loadDescIntoDOM() {
-        pokemonDescDiv.innerHTML = "" //Kill old inner HTML
+        pokemonDescDiv.innerHTML = "" 
 
         const nameDiv = document.createElement("p");
         const heightDiv = document.createElement("p")
         const weightDiv = document.createElement("p")
         const speciesDiv = document.createElement("p")
-        const bioDiv = document.createElement("p") // Bio text from species endpoint
+        const bioDiv = document.createElement("p") 
 
         heightDiv.innerText = "Height: " + this.height / 10 + "m"
         weightDiv.innerText = "Weight: " + this.weight / 10 + "kg"
         speciesDiv.innerText = "From the " + this.species + " species"
         nameDiv.innerText = this.name.toUpperCase()
         
-        // Styling the yellow bio (Extra Endpoint data)
         bioDiv.innerText = this.flavorText;
         bioDiv.style.color = "#ffff00";
         bioDiv.style.fontSize = "10px";
@@ -136,13 +134,12 @@ class Pokemon {
     }
 
     async loadAbilitiesIntoDOM() {
-        pokemonAbilitiesDiv.innerHTML = ""  //Kill old inner HTML
+        pokemonAbilitiesDiv.innerHTML = ""  
         const titleDiv = document.createElement("h2")
         titleDiv.innerText = "ABILITIES"
 
         pokemonAbilitiesDiv.append(titleDiv)
         for (let i = 0; i < this.abilities.length; i++) {
-            // Endpoint 4: Fetching ability effect detail
             const abilityRes = await fetch(this.abilities[i].url).then(res => res.json());
             const shortEffect = abilityRes.effect_entries.find(e => e.language.name === 'en')?.short_effect || "";
 
@@ -164,14 +161,17 @@ class Pokemon {
         this.loadAbilitiesIntoDOM()
         this.loadImgIntoDOM()
         
-        // Update the black buttons on the right
         const controls = document.querySelectorAll('.control');
         
-        // Update the 1st black button with types
-        if(controls[0]) controls[0].innerText = this.types.join(" / ").toUpperCase();
+        // Index 0: TYPE
+        if(controls[0]) {
+            controls[0].innerText = this.types.join(" / ").toUpperCase();
+        }
 
-        // Update the 3rd black button with evolution data (Now index 2 because Weakness is gone)
-        if(controls[2]) controls[2].innerText = `EVO: ${this.nextEvo.toUpperCase()}`;
+        // Index 2: EVOLUTION (Updated from 3 to 2)
+        if(controls[2]) {
+            controls[2].innerText = `EVO: ${this.nextEvo.toUpperCase()}`;
+        }
     }
 }
 
@@ -196,7 +196,7 @@ async function onSearch() {
         const pokemon = await GetPokemonData(input.toLowerCase())
         pokemon.loadIntoDOM()
         padInputEl.innerText = input
-        currentInput = '' // Reset internal input after successful search
+        currentInput = '' 
     } catch (err) {
         console.error(err)
         padInputEl.innerText = 'Not found'
