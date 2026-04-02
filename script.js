@@ -17,6 +17,10 @@ async function GetPokemon(nameOrID) {
 async function GetPokemonData(nameOrID) {
     const pokemonData = await GetPokemon(nameOrID);
     console.log(pokemonData);
+    
+    // Extracting types
+    const pokemonTypes = pokemonData.types.map(t => t.type.name);
+
     const pokemonAbilities = []
     for (let i = 0; i < pokemonData.abilities.length; i++) {
         pokemonAbilities.push(
@@ -34,7 +38,8 @@ async function GetPokemonData(nameOrID) {
         pokemonData.sprites,
         pokemonData.species.name,
         pokemonData.species.url,
-        pokemonAbilities
+        pokemonAbilities,
+        pokemonTypes // Added types here
     );
 
     // EXTRA ENDPOINTS FETCHING
@@ -43,7 +48,7 @@ async function GetPokemonData(nameOrID) {
 }
 
 class Pokemon {
-    constructor(id, name, height, weight, sprites, species, speciesUrl, abilities) {
+    constructor(id, name, height, weight, sprites, species, speciesUrl, abilities, types) {
         this.id = id;
         this.name = name;
         this.sprites = sprites;
@@ -52,6 +57,7 @@ class Pokemon {
         this.species = species
         this.speciesUrl = speciesUrl
         this.abilities = abilities
+        this.types = types // New property for types
         // New properties for extra endpoints
         this.flavorText = ""
         this.nextEvo = "MAX STAGE"
@@ -107,15 +113,22 @@ class Pokemon {
         pokemonDescDiv.innerHTML = "" //Kill old inner HTML
 
         const nameDiv = document.createElement("p");
+        const typeDiv = document.createElement("p") // New element for types
         const heightDiv = document.createElement("p")
         const weightDiv = document.createElement("p")
         const speciesDiv = document.createElement("p")
         const bioDiv = document.createElement("p") // Bio text from species endpoint
 
+        nameDiv.innerText = this.name.toUpperCase()
+        
+        // Formatting and displaying types
+        typeDiv.innerText = "TYPE: " + this.types.join(" / ").toUpperCase()
+        typeDiv.style.color = "#00ff00" // Green for visibility
+        typeDiv.style.fontSize = "11px"
+
         heightDiv.innerText = "Height: " + this.height / 10 + "m"
         weightDiv.innerText = "Weight: " + this.weight / 10 + "kg"
         speciesDiv.innerText = "From the " + this.species + " species"
-        nameDiv.innerText = this.name.toUpperCase()
         
         // Styling the yellow bio (Extra Endpoint data)
         bioDiv.innerText = this.flavorText;
@@ -124,6 +137,7 @@ class Pokemon {
         bioDiv.style.marginTop = "8px";
 
         pokemonDescDiv.append(nameDiv)
+        pokemonDescDiv.append(typeDiv) // Display type right under the name
         pokemonDescDiv.append(heightDiv)
         pokemonDescDiv.append(weightDiv)
         pokemonDescDiv.append(speciesDiv)
