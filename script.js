@@ -2,6 +2,7 @@ const POKEAPI_URL = "https://pokeapi.co/api/v2/"
 const pokemonDescDiv = document.getElementById("description")
 const pokemonAbilitiesDiv = document.getElementById("abilities")
 const padInputEl = document.getElementById('padInput')
+const pokemonStatsDivs = document.getElementsByClassName("stat-row")
 
 async function GetData(subUrl, query) {
     const data = await fetch(POKEAPI_URL + subUrl + "/" + query);
@@ -30,6 +31,16 @@ async function GetPokemonData(nameOrID) {
             )
         )
     }
+
+    const pokemonStats = []
+    for (let i = 0; i < pokemonData.stats.length; i++) {
+        pokemonStats.push(
+            new PokemonStat(
+                pokemonData.stats[i].stat.name,
+                pokemonData.stats[i].base_stat
+            )
+        )
+    }
     const pokemon = new Pokemon(
         pokemonData.id,
         pokemonData.name,
@@ -39,7 +50,8 @@ async function GetPokemonData(nameOrID) {
         pokemonData.species.name,
         pokemonData.species.url,
         pokemonAbilities,
-        pokemonTypes 
+        pokemonTypes,
+        pokemonStats
     );
 
     // EXTRA ENDPOINTS FETCHING
@@ -48,7 +60,7 @@ async function GetPokemonData(nameOrID) {
 }
 
 class Pokemon {
-    constructor(id, name, height, weight, sprites, species, speciesUrl, abilities, types) {
+    constructor(id, name, height, weight, sprites, species, speciesUrl, abilities, types, stats) {
         this.id = id;
         this.name = name;
         this.sprites = sprites;
@@ -61,6 +73,7 @@ class Pokemon {
         // New properties for extra endpoints
         this.flavorText = ""
         this.nextEvo = "MAX STAGE"
+        this.stats = stats
     }
 
     // Integrated logic for Endpoint 2 (Species) and 3 (Evolution)
@@ -156,10 +169,31 @@ class Pokemon {
         else imgEl.src = 'temp/placeholder.png'
     }
 
+    loadStatsIntoDOM(){
+        for(let i = 0; i < pokemonStatsDivs.length; i++){ 
+            pokemonStatsDivs[i].innerHTML = "" 
+            const titleDiv = document.createElement("div");
+            const statDiv = document.createElement("div");
+            titleDiv.classList.add("stat-label")
+            statDiv.classList.add("stat-box")
+            if(i < this.stats.length){
+                titleDiv.innerText = this.stats[i].name
+                statDiv.innerText = this.stats[i].level
+            }
+            else{
+                titleDiv.innerText = "Stat "+(i+1)
+                statDiv.innerText = 0
+            }
+            pokemonStatsDivs[i].appendChild(statDiv)
+            pokemonStatsDivs[i].appendChild(titleDiv)
+        }
+    }
+
     loadIntoDOM() {
         this.loadDescIntoDOM()
         this.loadAbilitiesIntoDOM()
         this.loadImgIntoDOM()
+        this.loadStatsIntoDOM()
         
         const controls = document.querySelectorAll('.control');
         
@@ -179,6 +213,12 @@ class PokemonAbility {
     constructor(name, url) {
         this.name = name
         this.url = url
+    }
+}
+class PokemonStat {
+    constructor(name, level) {
+        this.name = name
+        this.level = level
     }
 }
 
