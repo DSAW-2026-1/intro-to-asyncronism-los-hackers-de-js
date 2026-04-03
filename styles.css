@@ -1,0 +1,262 @@
+:root {
+    --bg: #b20303;
+    --panel: #8b0000;
+    --accent: #ffb03b;
+    --dark: #0b0b0b;
+    --light: #e6e6e6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, sans-serif;
+    background: var(--bg);
+    color: #fff;
+}
+
+.app {
+    max-width: 73.75rem;
+    margin: 1.75rem auto;
+    padding: 1.125rem;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9375rem 0.5rem;
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: rebeccapurple;
+    border: 0.375rem solid #fff;
+    box-shadow: 0 0.25rem 0 rgba(0, 0, 0, .3);
+}
+
+.indicators {
+    display: flex;
+    gap: 0.5rem
+}
+
+.small-square {
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 0.125rem solid #fff;
+    background: transparent;
+    display: inline-block
+}
+
+.small-square.green {
+    background: #2ecc40
+}
+
+.top-right {
+    font-family: 'Press Start 2P', monospace;
+    color: #fff;
+    font-size: 1.25rem
+}
+
+.main {
+    /*display: flex;*/
+    gap: 1.5rem;
+    margin-top: 1.125rem;
+}
+
+/*.left-panel {
+    flex: 1;
+}*/
+
+.image-wrap {
+    background: #fff;
+    padding: 1.125rem;
+    border-radius: 0.375rem;
+    display: inline-block;
+    position: relative;
+}
+.image-wrap-internal{
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 0.375rem solid #ddd; 
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.image-wrap img {
+    display: block;
+    /*max-width: 40rem;*/
+    width: 100%;
+    height: auto;
+    /*border: 0.375rem solid #ddd;*/
+
+    /*Nearest neighbor scaling*/
+    /* IE, only works on <img> tags */
+    -ms-interpolation-mode: nearest-neighbor;
+    /* Firefox */
+    image-rendering: crisp-edges;
+    /* Chromium + Safari */
+    image-rendering: pixelated;
+}
+
+.image-wrap:after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    bottom: -1.125rem;
+    width: 2.25rem;
+    height: 1.375rem;
+    background: var(--bg);
+    transform: skewX(-18deg)
+}
+
+#description {
+    margin-top: 1.375rem;
+    background: #0b0b0b;
+    padding: 1.125rem;
+    border: 0.375rem solid #eee;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.875rem
+}
+
+.right-panel {
+    /*width: 26.25rem;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    gap: 1.125rem
+}
+@media screen and (min-width:992px) {
+    .right-panel{
+        width: 26.25rem;
+    }
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem
+}
+
+.control {
+    background: #0b0b0b;
+    color: #fff;
+    border: 0.25rem solid #eee;
+    padding: 1.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 0.1875rem;
+    text-align: center;
+}
+
+/*TODO: This thing explodes below 400px*/
+.pad-and-stats {
+    display: flex;
+    gap: 1.125rem;
+    align-items: flex-start
+}
+
+.pad {
+    background: transparent;
+    max-width: 14.375rem;
+}
+
+.pad .myrow {
+    display: flex;
+    gap: 0.625rem;
+    margin-bottom: 0.625rem
+}
+
+.pad button {
+    width: 4.375rem;
+    height: 3.625rem;
+    border-radius: 0.375rem;
+    border: 0.1875rem solid rgba(0, 0, 0, .15);
+    background: #dcdcdc;
+    color: #222;
+    font-size: 1.25rem
+}
+
+.pad .search {
+    background: var(--accent);
+    border-color: #eaa84a;
+}
+
+.pad .clear {
+    background: #e54a4a;
+    color: #fff
+}
+
+.pad .new {
+    background: #3ee24a;
+    color: #012
+}
+
+.pad .myrow.small button {
+    width: 7.5rem
+}
+
+.stats {
+    /*width: 10.625rem*/
+    width: 8rem;
+}
+
+.stats-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem
+}
+
+.stat-box {
+    font-family: 'Press Start 2P', monospace;
+    background: #0b0b0b;
+    border: 0.25rem solid #fff;
+    padding: 0.5rem 0.75rem;
+    width: 4.375rem;
+    text-align: center;
+    font-weight: 700
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #fff;
+    opacity: .9
+}
+
+@media(max-width:61.25rem) {
+    .app {
+        padding: 0.75rem
+    }
+
+    .main {
+        flex-direction: column
+    }
+
+    .pad-and-stats {
+        flex-direction: row;
+        justify-content: space-between
+    }
+}

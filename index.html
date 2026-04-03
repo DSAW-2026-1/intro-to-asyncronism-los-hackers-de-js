@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeDex</title>
+
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="22x22" href="/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="top-left">
+                <div class="avatar"></div>
+                <div class="indicators">
+                    <span class="small-square"></span>
+                    <span class="small-square"></span>
+                    <span class="small-square green"></span>
+                </div>
+            </div>
+            <div class="top-right">PokeDex Console</div>
+        </header>
+
+        <main class="main container">
+            <div class="row row-cols-lg-2">
+                <section class="left-panel col-lg mb-3 mb-lg-0 d-flex flex-column flex-grow-1">
+                    <div class="image-wrap">
+                        <div class="image-wrap-internal position-relative">   
+                            <img id="pokemonImage" class="position-absolute top-50 start-50 translate-middle" src="images/no_pokemon.png" alt="Pokemon">
+                        </div>
+                    </div>
+                    <div id="description">
+                        <p id="pokemonName">No pokemon has been loaded. Start by typing a pokemon ID and clicking Search</p>
+                    </div>
+                </section>
+
+                <aside class="right-panel col-lg-3 col-xl-auto d-flex flex-column flex-md-row flex-lg-column">
+                    <div class="controls flex-grow-1">
+                        <div class="control">TYPE</div>
+                        <div class="control" id="abilities">ABILITIES</div>
+                        <div class="control">EVOLUTION</div>
+                    </div>
+
+                    <div class="pad-and-stats">
+                        <div class="pad">
+                            <div id="padInput" class="pad-input">0</div>
+                            <div class="myrow"><button>7</button><button>8</button><button>9</button></div>
+                            <div class="myrow"><button>4</button><button>5</button><button>6</button></div>
+                            <div class="myrow"><button>1</button><button>2</button><button>3</button></div>
+                            <div class="myrow"><button>0</button><button class="search flex-grow-1">Search</button></div>
+                            <div class="myrow small"><button class="clear">Clear</button><button class="new">New</button></div>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stats-title">Stats</div>
+                            <div class="stat-row"><div class="stat-box">0</div><div class="stat-label">stat 1</div></div>
+                            <div class="stat-row"><div class="stat-box">0</div><div class="stat-label">stat 2</div></div>
+                            <div class="stat-row"><div class="stat-box">0</div><div class="stat-label">stat 3</div></div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
