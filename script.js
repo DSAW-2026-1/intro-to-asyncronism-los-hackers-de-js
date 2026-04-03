@@ -166,7 +166,7 @@ class Pokemon {
     loadImgIntoDOM() {
         const imgEl = document.getElementById('pokemonImage')
         if (this.sprites && this.sprites.front_default) imgEl.src = this.sprites.front_default
-        else imgEl.src = 'temp/placeholder.png'
+        else imgEl.src = 'images/no_pokemon.png'
     }
 
     loadStatsIntoDOM(){
